@@ -1,0 +1,25 @@
+{
+  "name": "babel-await-add-catch",
+  "version": "0.0.1",
+  "description": "Babel plugin helps automatically add try catch and console when encountering await",
+  "main": "index.js",
+  "scripts": {
+    "build": ""
+  },
+  "keywords": [
+    "babel-plugin",
+    "ast",
+    "async",
+    "await",
+    "try-catch"
+  ],
+  "author": "dave-wind",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.16.8",
+    "@babel/core": "^7.17.2",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/types": "^7.17.0",
+    "babel-template": "^6.26.0"
+  }
+}
