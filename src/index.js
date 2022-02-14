@@ -24,8 +24,7 @@ module.exports = function ({ types }) {
         AwaitExpression(path) {
 
             const isTryExpression = path.findParent(p => p.isTryStatement());
-            
-            // 
+
             if (isTryExpression) {
                 return false;
             }
@@ -36,16 +35,16 @@ module.exports = function ({ types }) {
             // 获取 声明 await 函数的 变量
             const declarIdPath = path.getSibling('id');
 
-            const variableDeclaration = declarIdPath && declarIdPath.node ? declarIdPath.node.name : '';
+            const variableDeclaration = declarIdPath && declarIdPath.node ? "_" + declarIdPath.node.name : '';
             // 删除
             // path.parentPath.remove();
 
             // 当申明过变量 且 作用域内 不存在该变量
-            if (variableDeclaration && !thisEnvFn.scope.hasBinding('_' + variableDeclaration)) {
+            if (variableDeclaration && !thisEnvFn.scope.hasBinding(variableDeclaration)) {
                 thisEnvFn.scope.push({
-                    id: types.identifier('_' + variableDeclaration),
+                    id: types.identifier(variableDeclaration),
                     init: null
-                })
+                });
             }
 
             const tempStrName = variableDeclaration ? "HAS_VAR" : "NO_VAR";
@@ -58,7 +57,7 @@ module.exports = function ({ types }) {
 
             // 增加 模版key
             if (tempStrName == "HAS_VAR") {
-                tempArgumentObj.AWAIT_NAME = types.identifier('_' + variableDeclaration);
+                tempArgumentObj.AWAIT_NAME = types.identifier(variableDeclaration);
                 // 根据 ast 语法树 结构 分析得来 路径问题
                 path.parentPath.parentPath.replaceWith(
                     temp(tempArgumentObj)
@@ -68,31 +67,6 @@ module.exports = function ({ types }) {
                     temp(tempArgumentObj)
                 );
             }
-            /**
-             *@description 不用模版 多层嵌套 不好维护
-             *@
-             */
-
-            // path.parentPath.parentPath.replaceWith(
-            //     types.tryStatement(
-            //         types.blockStatement(
-            //             [
-            //                 types.expressionStatement(
-            //                     types.assignmentExpression(
-            //                         '=',
-            //                         types.identifier('_' + awaitName),
-            //                         types.awaitExpression(
-            //                             types.callExpression(
-            //                                 types.identifier(awaitFuncName),
-            //                                 []
-            //                             )
-            //                         )
-            //                     )
-            //                 )
-            //             ]
-            //         )
-            //     )
-            // );
         }
     }
     return {

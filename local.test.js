@@ -20,6 +20,17 @@ let tempObject = {
     `
 }
 
+function getScopeDeclaration(path) {
+    let declaration = [];
+    // visitor
+    path.traverse({
+        ThisExpression(path) {
+            declaration.push(path);
+        }
+    });
+    return declaration;
+}
+
 let addTryExpressionByAwait = {
     visitor: {
         AwaitExpression(path) {
@@ -36,16 +47,16 @@ let addTryExpressionByAwait = {
             // 获取 声明 await 函数的 变量
             const declarIdPath = path.getSibling('id');
 
-            const variableDeclaration = declarIdPath && declarIdPath.node ? declarIdPath.node.name : '';
+            const variableDeclaration = declarIdPath && declarIdPath.node ? "_" + declarIdPath.node.name : '';
             // 删除
             // path.parentPath.remove();
 
             // 创建变量 在函数体内 第一行
-            if (variableDeclaration && !thisEnvFn.scope.hasBinding('_' + variableDeclaration)) {
+            if (variableDeclaration && !thisEnvFn.scope.hasBinding(variableDeclaration)) {
                 thisEnvFn.scope.push({
-                    id: types.identifier('_' + variableDeclaration),
+                    id: types.identifier(variableDeclaration),
                     init: null
-                })
+                });
             }
 
             const tempStrName = variableDeclaration ? "HAS_VAR" : "NO_VAR";
@@ -58,7 +69,7 @@ let addTryExpressionByAwait = {
 
             // 增加 模版key
             if (tempStrName == "HAS_VAR") {
-                tempArgumentObj.AWAIT_NAME = types.identifier('_' + variableDeclaration);
+                tempArgumentObj.AWAIT_NAME = types.identifier(variableDeclaration);
                 // 根据 ast 语法树 结构 分析得来 路径问题
                 path.parentPath.parentPath.replaceWith(
                     temp(tempArgumentObj)
@@ -96,7 +107,7 @@ let addTryExpressionByAwait = {
 
 let sourceCode = `
 async function demo() {
-	await handlePromise();
+	const result = await handlePromise();
 	return result;
 }
 `;

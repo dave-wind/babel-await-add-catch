@@ -1,11 +1,16 @@
 {
   "name": "babel-await-add-catch",
   "version": "0.0.1",
-  "description": "Babel plugin helps automatically add try catch and console when encountering await",
-  "main": "index.js",
+  "description": "Babel plugin helps automatically add try catch console when encountering await",
+  "main": "lib/index.js",
   "scripts": {
-    "build": ""
+    "dev": "node local.test.js",
+    "build": "rm -rf lib && npx babel src --out-dir lib",
+    "deploy": "npm run build && npm publish"
   },
+  "files": [
+    "lib"
+  ],
   "keywords": [
     "babel-plugin",
     "ast",

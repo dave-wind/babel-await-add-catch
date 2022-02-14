@@ -1,5 +1,9 @@
 /node_modules/
+example/**/node_modules
+example/node_modules
+example/package-lock.json
 /.idea/
 .DS_Store
 **/.DS_Store
 package-lock.json
+.vscode
