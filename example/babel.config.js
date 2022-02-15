@@ -3,11 +3,10 @@ module.exports = {
         [
             require('../lib/index'),
             {
-                "exclude": []
+                "exclude": ['exclude'],
+                "include": ['index','index2'],
+                "customLog": 'My name is Dave Jones'
             }
         ]
-    ],
-    "ignore": [
-        "./src/exclude.js",
     ]
 };
